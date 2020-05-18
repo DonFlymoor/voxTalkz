@@ -214,6 +214,7 @@ class voxTalkz():
                         if wait == "continue":
                             pass
                         elif wait == "save":
+                            self.SoundFile = SoundFile
                             self.save()
                         elif wait == "pass":
                             break
