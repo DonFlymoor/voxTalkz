@@ -117,7 +117,7 @@ Any feature requests will be implemented if possible.
 
 ## License
 
-This project is licensed under the GNUv3 License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the GNUv3 License - see the [LICENSE.md](LICENSE) file for details
 
 ```
 Usage: voxtalkz [input file, output file] 
