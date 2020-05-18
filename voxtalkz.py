@@ -187,7 +187,8 @@ class voxTalkz():
                     print('Makeing %s...'%List[1])
                 try:
                     audio_segment =  AudioSegment.from_mp3(self.homedir+'/.voxTalkz/soundEffects/'+List[1]+'.mp3')
-                    print("Done!\n")
+                    if self.debug:
+                        print("Done!\n")
                 except:
                     print('\n !!! Could not open %s'%(self.homedir+'/.voxtalkz/soundEffects'+List[1]+'.mp3 !!!, opening a random file instead'))
                     continue
@@ -287,11 +288,12 @@ class voxTalkz():
                                 if self.debug:
                                     print("Key error: %s not in VAR list"%parsed[1])
                         else:
-                            SoundFile = SoundFile.overlay(audio_segment, position=len(self.SoundFile)-len(audio_segment))
+                            print(len(SoundFile),len(audio_segment))
+                            SoundFile = SoundFile.overlay(audio_segment, position=(len(SoundFile)-len(audio_segment)))
                         audio_segment = False
 
                     elif parsed[0] == "VAR":
-                        hold.__setitem__("VAR"+str(parsed[1]), len(self.SoundFile))
+                        hold.__setitem__("VAR"+str(parsed[1]), len(SoundFile))
 
                     elif parsed[0] == "TRIM":
                         pass
