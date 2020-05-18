@@ -68,6 +68,7 @@ class voxTalkz():
         # turn to sound
         if parsed:
             OutputSound = self.ListToSound(parsed)
+	    self.SoundFile += OutputSound
         else:
             print("Error: Could not parse!")
         # Save the file
@@ -91,7 +92,7 @@ class voxTalkz():
             except:
                 print('No such file: %s'%file)
                 return False
-        
+
             # Split it into a list, with each line being a seprate item
             List = File.readlines()
             # Close our file
@@ -168,6 +169,7 @@ class voxTalkz():
         Turns text into speach or sound effects
         '''
         hold={}
+	SoundFile=AudioSegment.empty()
         for List in Lists:
             effects = False
             audio_segment = False
@@ -185,7 +187,6 @@ class voxTalkz():
                     print('Makeing %s...'%List[1])
                 try:
                     audio_segment =  AudioSegment.from_mp3(self.homedir+'/.voxTalkz/soundEffects/'+List[1]+'.mp3')
-                    
                     print("Done!\n")
                 except:
                     print('\n !!! Could not open %s'%(self.homedir+'/.voxtalkz/soundEffects'+List[1]+'.mp3 !!!, opening a random file instead'))
@@ -249,9 +250,6 @@ class voxTalkz():
                 except:
                     print("%s is NOT a type of person! Using normal_woman..."%List[1])
                     self.Crew.__setitem__(List[0], self.Crew['normal_woman'])
-                
-            
-            
 
             # Apply effects
             if effects != False:
@@ -259,7 +257,7 @@ class voxTalkz():
                     effects=effects.split('|')
                 else:
                     effects = [effects]
-                    
+
                 for effect in effects:
                     if "=" not in effect:
                         effect += "=False"
@@ -284,12 +282,12 @@ class voxTalkz():
                             pass
                         if "VAR" in parsed[1]:
                             try:
-                                self.SoundFile = self.SoundFile.overlay(audio_segment, position=hold[parsed[1]])
+                                SoundFile = SoundFile.overlay(audio_segment, position=hold[parsed[1]])
                             except:
                                 if self.debug:
                                     print("Key error: %s not in VAR list"%parsed[1])
                         else:
-                            self.SoundFile = self.SoundFile.overlay(audio_segment, position=len(self.SoundFile)-len(audio_segment))
+                            SoundFile = SoundFile.overlay(audio_segment, position=len(self.SoundFile)-len(audio_segment))
                         audio_segment = False
 
                     elif parsed[0] == "VAR":
@@ -300,15 +298,16 @@ class voxTalkz():
 
                     elif parsed[0] == "REPEAT":
                         audio_segment *= int(parsed[1])
-                    
+
                     elif parsed[0] == "FADE":
                         audio_segment = audio_segment.fade_out(len(audio_segment))
-                        
+
                     elif parsed[0] == "FADE_IN":
                         audio_segment = audio_segment.fade_in(len(audio_segment))
             # Finaly, add audio segment to the sound-file
             if audio_segment != False:
-                self.SoundFile += audio_segment
+                SoundFile += audio_segment
+	return SoundFile
 
 
         return True
@@ -331,13 +330,13 @@ if __name__ == "__main__":
     if ("--debug") in args:
         args.pop("--debug")
         debug = True
-        
+
     if ("--help" or "-h") in args:
         voxTalkz('', '').help()
-        
+
     elif len(args) != 3:
         print("Expecting two arguments! Usage: voxtalkz [input file, output file] ")
-        
+
     else:
         print(args)
         script = args[1]
