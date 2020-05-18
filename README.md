@@ -1,5 +1,7 @@
 voxTalkz is an open source python library that aims to provide a service to convert play-like-scripts to semi-relisic audio-dramas.
 
+Any and all help will be appriciated!
+
 voxTalkz needs several python libraries to function:
 Google Text To Speach (gTTS)
 Pydub (pydub)
