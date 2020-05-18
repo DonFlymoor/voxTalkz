@@ -327,7 +327,7 @@ if __name__ == "__main__":
     args = sys.argv
     debug = False
     if ("--debug") in args:
-        args.pop("--debug")
+        args.remove("--debug")
         debug = True
 
     if ("--help" or "-h") in args:
@@ -340,7 +340,13 @@ if __name__ == "__main__":
         print(args)
         script = args[1]
         print(f"Using {script} as input file")
-        filename = args[2]
-        print(f"Outputting to {filename}")
-        voxTalkz(script, filename, debug).ToSound()
+        try:
+            open(script).close()
+        except:
+            print(f'No such file: {script}')
+            script = False
+        if script:
+            filename = args[2]
+            print(f"Outputting to {filename}")
+            voxTalkz(script, filename, debug).ToSound()
 
