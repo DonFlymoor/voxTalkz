@@ -1,0 +1,29 @@
+		    indian_man CL
+		    american_woman CL
+
+                    russian_woman SC
+                    drawling_man ! Robot
+                    autistic_woman CL
+                    marika SL
+                    au_woman CL
+                    british_woman CL
+                    indian_woman CL
+                    spanish_woman SC
+
+                    hindu_woman SC
+
+                    italian_man SC
+                    sky_woman SC SCOTTICH_WOMAN
+
+                    stupid_man CL
+                    tramatized_woman SC
+                    dutch_woman !
+                    silly_man SC
+
+                    tramitized_girl SC CHANTER
+                    bored_teen SC
+                    happy_girl ! CHANTER
+
+
+                    spoiled_girl SC
+                    normal_woman CL
