@@ -190,7 +190,7 @@ class voxTalkz():
                     print("Done!\n")
                 except:
                     print('\n !!! Could not open %s'%(self.homedir+'/.voxtalkz/soundEffects'+List[1]+'.mp3 !!!, opening a random file instead'))
-                    audio_segment =  AudioSegment.from_mp3(self.homedir+'/.voxtalkz/soundEffects'+"groans.mp3")
+                    continue
                 # Open sound to a variable
 
             elif List[0] in self.Crew:
