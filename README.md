@@ -61,7 +61,7 @@ Open the commandline and navigate to your file.
 Run the script.
 
 ```
-./voxTalkz --debug test2.script test2
+./voxTalkz test2.script test2
 ```
 
 Play test2.mp3
@@ -86,7 +86,7 @@ Open the commandline and navigate to your file.
 Run the script.
 
 ```
-./voxTalkz --debug test3.script test3
+./voxTalkz test3.script test3
 ```
 
 Play the resulting test3.mp3.
