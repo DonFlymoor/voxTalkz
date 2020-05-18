@@ -68,7 +68,7 @@ class voxTalkz():
         # turn to sound
         if parsed:
             OutputSound = self.ListToSound(parsed)
-	    self.SoundFile += OutputSound
+            self.SoundFile += OutputSound
         else:
             print("Error: Could not parse!")
         # Save the file
@@ -169,7 +169,7 @@ class voxTalkz():
         Turns text into speach or sound effects
         '''
         hold={}
-	SoundFile=AudioSegment.empty()
+        SoundFile=AudioSegment.empty()
         for List in Lists:
             effects = False
             audio_segment = False
@@ -307,10 +307,9 @@ class voxTalkz():
             # Finaly, add audio segment to the sound-file
             if audio_segment != False:
                 SoundFile += audio_segment
-	return SoundFile
+        return SoundFile
 
 
-        return True
     def save(self):
         '''
         function to save compiled file
