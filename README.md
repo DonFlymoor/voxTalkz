@@ -63,7 +63,7 @@ List of all actors:
     youong_grandma
     spoiled_girl
     normal_woman
-
+    
 Sound effects must be in the .mp3 format and placed in /home/user/.voxtalk/soundEffects
- To use footsteps.mp3: put *footsteps in your script
+To use footsteps.mp3: put *footsteps in your script
 
