@@ -12,7 +12,7 @@ Pydub (pydub)
 
 to install those libraries, use the following commands:
 ```
-pip3 install gTTs
+pip3 install gTTS
 pip3 install pydub
 ```
 ## Testing
