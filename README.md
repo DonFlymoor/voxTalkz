@@ -15,7 +15,13 @@ to install those libraries, use the following commands:
 pip3 install gTTS
 pip3 install pydub
 ```
+
+## Installing
+
+`pip3 install voxtalkz`
+
 ## Testing
+
 Write a short script and save it as `test.script`.
 ```
 # Assign a name to an actor
@@ -29,7 +35,7 @@ Open the commandline and navigate to your file.
 Run the script.
 
 ```
-./voxtalkz test.script test --debug
+python3 -m voxtalkz test.script test --debug
 ```
 
 Assuming all went well, you should see a file named test.mp3. Play it with your favorate mp3 playing programming.
@@ -41,7 +47,7 @@ Navigate to your home directory and create a folder named `.voxtalkz`.
 
 Navigate into that folder and create a new folder named `soundEffects`.
 
-Download a .mp3 sound effect and place it in the `/.voxtalkz/soundEffects/` folder, for this tutorial we will assume the file is called `footsteps.mp3`.
+Download a .mp3 sound effect and place it in the `~/.voxtalkz/soundEffects/` folder, for this tutorial we will assume the file is called `footsteps.mp3`.
 
 Write a short script and save it as `test2.script`.
 
@@ -61,7 +67,7 @@ Open the commandline and navigate to your file.
 Run the script.
 
 ```
-./voxtalkz test2.script test2 --debug
+python3 -m voxtalkz test2.script test2 --debug
 ```
 
 Play test2.mp3
@@ -86,7 +92,7 @@ Open the commandline and navigate to your file.
 Run the script.
 
 ```
-./voxtalkz test3.script test3 --debug
+python3 -m voxtalkz test3.script test3 --debug
 ```
 
 Play the resulting test3.mp3.
@@ -99,7 +105,7 @@ Add these line of code to your program:
 ```
 import voxtalkz
 ...
-TalkzBox = voxtalkz.voxtalkz(<scriptname>,<outputfilename>)
+TalkzBox = voxtalkz.voxTalkz(<scriptname>,<outputfilename>)
 Parsed = TalkzBox.Parse(TalkzBox.file)
 OutputSound = TalkzBox.ListToSound(Parsed)
 # OutputSound is an instance of pydub.AudioSegment. It can be proccesed with pydub now.
@@ -120,7 +126,7 @@ Any feature requests will be implemented if possible.
 This project is licensed under the GNUv3 License - see the [LICENSE.md](LICENSE) file for details
 
 ```
-Usage: voxtalkz [input file, output file] 
+Usage: python3 -m voxtalkz [input file, output file] 
 
 Converts play-like script to a .mp3 file 
 Script file must be written in this manner: 
@@ -144,7 +150,7 @@ List of all effects:
 	@REPEAT= | Repeat audio segment however many times you specify. e.g. (normal_woman:Hello, world!@REPEAT=10) would produce Someone saying "Hello, world!" ten times
 	@VAR=    | Assign a number to a temporary table. Only used with @OVERLAY
 	@VOLUME= | Set volume change in decibels. A negitive number will reduce the volume
-	@PITCH=  | Set pitch change. e.g. "normal_woman:Hello, world!@PITCH=0" would make the person sound like a little girl, while "normal_woman:Hello, world!@PITCH=-0.3" would sound like an old woman
+	@PITCH=  | Set pitch change. e.g. "normal_woman:Hello, world!@PITCH=0.3" would make the person sound like a little girl, while "normal_woman:Hello, world!@PITCH=-0.3" would sound like an old woman
 
 List of all actors:
 	indian_man | Clearly speaks
@@ -176,5 +182,5 @@ List of all actors:
 	normal_woman
     
 Sound effects must be in the .mp3 format and placed in /home/user/.voxtalk/soundEffects
-To use footsteps.mp3: put *footsteps in your script
+To use footsteps.mp3: put '*footsteps' in your script
 ```
