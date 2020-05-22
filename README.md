@@ -1,12 +1,12 @@
-# voxTalkz
+# voxtalkz
 
-voxTalkz is an open source python library that aims to provide a service to convert play-like-scripts to semi-relisic audio-dramas.
+voxtalkz is an open source python library that aims to provide a service to convert play-like-scripts to semi-relisic audio-dramas.
 
 ## Getting Started
 
 ### Prerequisites
 
-voxTalkz needs several python libraries to function:
+voxtalkz needs several python libraries to function:
 Google Text To Speach (gTTS)
 Pydub (pydub)
 
@@ -29,7 +29,7 @@ Open the commandline and navigate to your file.
 Run the script.
 
 ```
-./voxTalkz test.script test --debug
+./voxtalkz test.script test --debug
 ```
 
 Assuming all went well, you should see a file named test.mp3. Play it with your favorate mp3 playing programming.
@@ -37,11 +37,11 @@ Assuming all went well, you should see a file named test.mp3. Play it with your 
 
 ### Use a sound Effect
 
-Navigate to your home directory and create a folder named `.voxTalkz`.
+Navigate to your home directory and create a folder named `.voxtalkz`.
 
 Navigate into that folder and create a new folder named `soundEffects`.
 
-Download a .mp3 sound effect and place it in the `/.voxTalkz/soundEffects/` folder, for this tutorial we will assume the file is called `footsteps.mp3`.
+Download a .mp3 sound effect and place it in the `/.voxtalkz/soundEffects/` folder, for this tutorial we will assume the file is called `footsteps.mp3`.
 
 Write a short script and save it as `test2.script`.
 
@@ -61,7 +61,7 @@ Open the commandline and navigate to your file.
 Run the script.
 
 ```
-./voxTalkz test2.script test2 --debug
+./voxtalkz test2.script test2 --debug
 ```
 
 Play test2.mp3
@@ -86,20 +86,20 @@ Open the commandline and navigate to your file.
 Run the script.
 
 ```
-./voxTalkz test3.script test3 --debug
+./voxtalkz test3.script test3 --debug
 ```
 
 Play the resulting test3.mp3.
 
 ## Using as a Python Library
 
-Copy `voxTalkz.py` to the folder with the python file you want to use it with.
+Copy `voxtalkz.py` to the folder with the python file you want to use it with.
 
 Add these line of code to your program:
 ```
-import voxTalkz
+import voxtalkz
 ...
-TalkzBox = voxTalkz.voxTalkz(<scriptname>,<outputfilename>)
+TalkzBox = voxtalkz.voxtalkz(<scriptname>,<outputfilename>)
 Parsed = TalkzBox.Parse(TalkzBox.file)
 OutputSound = TalkzBox.ListToSound(Parsed)
 # OutputSound is an instance of pydub.AudioSegment. It can be proccesed with pydub now.

@@ -271,7 +271,7 @@ class voxTalkz():
                         if self.debug:
                             print("Volume is %s"%parsed[1])
                         audio_segment = audio_segment + parsed[1]
-                    
+ 
                     elif parsed[0] == "PITCH":
                         if self.debug:
                             pass
