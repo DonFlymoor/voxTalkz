@@ -18,7 +18,7 @@ URL = 'https://github.com/DonFlymoor/voxTalkz'
 EMAIL = 'donflymoor@gmail.com'
 AUTHOR = 'Don Flymoor'
 REQUIRES_PYTHON = '>=3.6.0'
-VERSION = '0.6.12-beta'
+VERSION = '1.0.0'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
