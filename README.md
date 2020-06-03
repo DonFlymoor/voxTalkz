@@ -10,7 +10,7 @@ voxtalkz needs several python libraries to function:
 Google Text To Speach (gTTS)
 Pydub (pydub)
 
-to install those libraries, use the following commands:
+if pulling from github, use the following commands:
 ```
 pip3 install gTTS
 pip3 install pydub
@@ -18,8 +18,21 @@ pip3 install pydub
 
 ## Installing
 
-`pip3 install voxtalkz`
+otherwise, just run this command
 
+**Note: pip support has not been tested, the 'testing' section may not work if the following command is used**
+
+`pip3 install voxtalkz` **May not work. Testing would be appriciated**
+
+**This method HAS been tested**
+```
+git clone https://github.com/DonFlymoor/voxTalkz.git
+cd voxTalkz
+```
+The following command will locally install voxtalkz, so the command `python3 -m voxtalkz ... ...` will work.
+```
+python setup.py install
+```
 ## Testing
 
 Write a short script and save it as `test.script`.
