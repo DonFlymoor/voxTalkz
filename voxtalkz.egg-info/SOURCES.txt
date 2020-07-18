@@ -1,5 +1,8 @@
 README.md
 setup.py
+voxtalkz/__init__.py
+voxtalkz/__main__.py
+voxtalkz/voxtalkz.py
 voxtalkz.egg-info/PKG-INFO
 voxtalkz.egg-info/SOURCES.txt
 voxtalkz.egg-info/dependency_links.txt

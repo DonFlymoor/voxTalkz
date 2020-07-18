@@ -1,9 +1,10 @@
 # __main__.py
 
 from voxtalkz import *
+import sys
 
 def main():
-	args = sys.argv
+    args = sys.argv
     debug = False
     if ("--debug") in args:
         args.remove("--debug")
