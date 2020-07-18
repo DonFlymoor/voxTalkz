@@ -1,0 +1,7 @@
+README.md
+setup.py
+voxtalkz.egg-info/PKG-INFO
+voxtalkz.egg-info/SOURCES.txt
+voxtalkz.egg-info/dependency_links.txt
+voxtalkz.egg-info/requires.txt
+voxtalkz.egg-info/top_level.txt

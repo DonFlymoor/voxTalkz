@@ -89,8 +89,10 @@ class voxTalkz():
                 File = open(file,'r')
                 if self.debug:
                     print('done!\n')
-            except:
+            except Exception as e:
                 print('No such file: %s'%file)
+                if self.debug:
+                    print(e)
                 return False
 
             # Split it into a list, with each line being a seprate item
