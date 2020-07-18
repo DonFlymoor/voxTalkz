@@ -75,7 +75,7 @@ Susan:Goodbye, World!
 # Add the soud effect
 *footsteps
 ```
-
+ 
 Open the commandline and navigate to your file.
 Run the script.
 
