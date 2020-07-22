@@ -149,6 +149,8 @@ Any feature requests will be implemented if possible.
 This project is licensed under the GNUv3 License - see the [LICENSE.md](LICENSE) file for details
 
 
+# Usage
+
 	Usage: python3 -m voxtalkz [input file, output file] 
 
 	Converts play-like script to a .mp3 file 
