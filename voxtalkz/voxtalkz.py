@@ -196,7 +196,7 @@ class voxTalkz():
                     if self.debug:
                         print("Done!\n")
                 except:
-                    print('\n !!! Could not open %s'%(self.homedir+'/.voxtalkz/soundEffects'+List[1]+'.mp3 !!!, opening a random file instead'))
+                    print('\n !!! Could not open %s'%(self.homedir+'/.voxtalkz/soundEffects/'+List[1]+'.mp3 !!!, opening a random file instead'))
                     continue
                 # Open sound to a variable
 
