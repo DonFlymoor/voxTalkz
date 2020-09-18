@@ -7,6 +7,15 @@ from gtts import gTTS
 import sys, os.path as path
 import io, time
 from pydub import AudioSegment
+import __builtin__
+import datetime
+
+file = 'null'
+
+def print(args):
+    with open(file,'w') as file:
+        file.write(args)
+    return __builtin__.print(*args, **kwargs)
 
 class voxTalkz():
     '''
@@ -26,6 +35,7 @@ class voxTalkz():
     '''
 
     def __init__(self, file, name, debug=False, timeme=False):
+        global file
         self.homedir = path.expanduser('~')
         self.name = name
         self.debug = debug
@@ -63,9 +73,9 @@ class voxTalkz():
                     "bored_teen":"te",
                     "happy_girl":"th",
                     "boss_lady":"tl",
-                    "youong_grandma":"vi",
+                    "young_grandma":"vi",
                     "spoiled_girl":"zh-cn",
-                    "normal_woman":"en"}
+                    "american_woman":"en"}
     def ToSound(self):
         # parse the file
         parsed = self.Parse(self.file)
@@ -116,11 +126,17 @@ class voxTalkz():
                 List[i] = '\n'
                 continue
             List[i] = List[i].replace('\n','')
-            # Chech if it is a sound effect
+            # Check if it is a sound effect
             if '*' in List[i]:
                 List[i]=['SOUND',(List[i].replace('*','')).replace('\n','')]
-            else:
+            elif ':' in List[i]:
                 List[i] = (List[i].replace('\n','')).split(':')
+            # If the user forgot, then add a collin
+            else:
+                print(f'Error on line {i}! \n {List[i]} \nNo collin or astrix. Assuming collin, Attempting to fix')
+                assumedName = (List[i].replace('\n','')).split(' ')[0]
+                List[i] = [assumedName, List[i].replace(assumedName, '')]
+
         while '\n' in List:
             List.remove('\n')
         # Return our list
@@ -129,9 +145,9 @@ class voxTalkz():
         return List
 
     def help(self):
-        print("Usage: python3 -m voxtalkz [input file, output file] \n\nConverts play-like script to a .mp3 file \nScript file must be written in this manner: \n\n#The first time a unknown name is called, instead of making the person talk, the name will be assigned to a person. \nSusan:normal_woman\n#Then the person will \"talk\"\nSusan:Hello, world!\n#Comments are allowed!\n*soundeffect \n\nEffects can be applied by adding an @ symbal the the effect name, like so:\nperson1:hello, world!@VOLUME=8\nA second effect can be applied by using the pipe(\"|\") like so:\nperson1:Hello, World!@FADE|VOLUME=8\n")
+        print("Usage: python3 -m voxtalkz [input file, output file] \n\nConverts play-like script to a .mp3 file \nScript file must be written in this manner: \n\n#The first time a unknown name is called, instead of making the person talk, the name will be assigned to a person. \nSusan:american_woman\n#Then the person will \"talk\"\nSusan:Hello, world!\n#Comments are allowed!\n*soundeffect \n\nEffects can be applied by adding an @ symbal the the effect name, like so:\nperson1:hello, world!@VOLUME=8\nA second effect can be applied by using the pipe(\"|\") like so:\nperson1:Hello, World!@FADE|VOLUME=8\n")
         print("List of all effects:")
-        list = ["@FADE | Fade to nothing","@FADE_IN | Fade in from silent","@OVERLAY | Overlays the sound onto what has already been recorded. Use @OVERLAY=VAR1 to START the overlay at the begining of where you assigned @VAR=1","@REPEAT= | Repeat audio segment however many times you specify. e.g. (normal_woman:Hello, world!@REPEAT=10) would produce someone saying \"Hello, world!\" ten times","@VAR=    | Assign a number to a temporary table. Only used with @OVERLAY","@VOLUME= | Set volume change in decibels. A negitive number will reduce the volume","@PITCH=  | Set pitch change. e.g. \"normal_woman:Hello, world!@PITCH=0.3\" would make the person sound like a little girl, while \"normal_woman:Hello, world!@PITCH=-0.3\" would sound like an old woman"]
+        list = ["@FADE | Fade to nothing","@FADE_IN | Fade in from silent","@OVERLAY | Overlays the sound onto what has already been recorded. Use @OVERLAY=VAR1 to START the overlay at the begining of where you assigned @VAR=1","@REPEAT= | Repeat audio segment however many times you specify. e.g. (american_woman:Hello, world!@REPEAT=10) would produce someone saying \"Hello, world!\" ten times","@VAR=    | Assign a number to a temporary table. Only used with @OVERLAY","@VOLUME= | Set volume change in decibels. A negitive number will reduce the volume","@PITCH=  | Set pitch change. e.g. \"american_woman:Hello, world!@PITCH=0.3\" would make the person sound like a little girl, while \"american_woman:Hello, world!@PITCH=-0.3\" would sound like an old woman"]
         for string in list:
             print("    "+string)
         print("\nList of all actors:")
@@ -163,9 +179,9 @@ class voxTalkz():
                         "bored_teen":"te",
                         "happy_girl":"th",
                         "boss_lady":"tl",
-                        "youong_grandma":"vi",
+                        "young_grandma":"vi",
                         "spoiled_girl":"zh-cn",
-                        "normal_woman":"en"}
+                        "american_woman":"en"}
         for string in actors:
             print("    "+string)
         print("\nSound effects must be in the .mp3 format and placed in /home/user/.voxtalk/soundEffects\n To use footsteps.mp3: put *footsteps in your script")
@@ -191,13 +207,28 @@ class voxTalkz():
             if List[0] == 'SOUND':
                 if self.debug:
                     print('Makeing %s...'%List[1])
-                try:
-                    audio_segment =  AudioSegment.from_mp3(self.homedir+'/.voxTalkz/soundEffects/'+List[1]+'.mp3')
-                    if self.debug:
-                        print("Done!\n")
-                except:
-                    print('\n !!! Could not open %s'%(self.homedir+'/.voxTalkz/soundEffects/'+List[1]+'.mp3 !!!, opening a random file instead'))
-                    continue
+                while True:
+                    try:
+                        try:
+                            audio_segment =  AudioSegment.from_mp3(self.homedir+'/.voxTalkz/soundEffects/'+List[1]+'.mp3')
+                        except:
+                            audio_segment =  AudioSegment.from_wav(self.homedir+'/.voxTalkz/soundEffects/'+List[1]+'.wav')
+                        except:
+                            audio_segment =  AudioSegment.from_ogg(self.homedir+'/.voxTalkz/soundEffects/'+List[1]+'.ogg')
+                        if self.debug:
+                            print("Done!\n")
+                        break
+                    except:
+                        contd = input('\n !!! Could not open %s'%(self.homedir+'/.voxTalkz/soundEffects/'+List[1]+'.mp3 (or .wav, or ogg) !!! Type continue to skip the sound effect, retry to retry after you\'ve fixed the problem, or exit to quit.'))
+                        if contd == 'continue':
+                            break
+                        elif contd == 'retry':
+                            pass
+                        elif contd == 'exit':
+                            return False
+                        else:
+                            print(f'{contd} is not an applicable answer. Trying again.')
+                            pass
                 # Open sound to a variable
 
             elif List[0] in self.Crew:
@@ -256,8 +287,8 @@ class voxTalkz():
                     if self.debug:
                         print('%s is now a %s\n'%(List[0],List[1]))
                 except:
-                    print("%s is NOT a type of person! Using normal_woman..."%List[1])
-                    self.Crew.__setitem__(List[0], self.Crew['normal_woman'])
+                    print("%s is NOT a type of person! Using american_woman..."%List[1])
+                    self.Crew.__setitem__(List[0], self.Crew['american_woman'])
 
             # Apply effects
             if effects != False:
@@ -306,6 +337,8 @@ class voxTalkz():
                         pass
 
                     elif parsed[0] == "REPEAT":
+                        if not parsed[1]:
+                            parsed[1] = 2
                         audio_segment *= int(parsed[1])
 
                     elif parsed[0] == "FADE":
