@@ -328,6 +328,8 @@ class voxTalkz():
                                 print(E)
                             else:
                                 return False
+                    File.seek(0)
+                    audio_segment = AudioSegment.from_mp3(File)
                 else:
                     try:
                         url = "https://texttospeech.googleapis.com/v1beta1/text:synthesize"
@@ -351,9 +353,13 @@ class voxTalkz():
                         with open(File,'wb') as file:
                             file.write(audioDecoded)
 
-                    # I think this makes the file readable? Not sure
-                    File.seek(0)
-                    audio_segment = AudioSegment.from_mp3(File)
+                        # I think this makes the file readable? Not sure
+                        File.seek(0)
+                        audio_segment = AudioSegment.from_mp3(File)
+                    except Exception as Error:
+                        print('Error when using wavenet voice!')
+                        print(Error)
+
                 if self.debug:
                     print('Done!\n')
 
