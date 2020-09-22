@@ -22,16 +22,18 @@ class voxTalkz():
     This function will turn a script written in this formant:
 
     ###Start###
+    Laura:tramitized_woman
+    Paul:italian_man
+
+
     Paul:Hello world
     *bang*
     Laura:Help world!
-
-    Laura=tramitized_woman
-    Paul=italian_man
+    
     ###End###
 
     into sound(i.e. people talking and sound effects) as an .mp3 file
-    sound effects must be placed into the effects folder as .mp3 files
+    sound effects must be placed into the effects folder as .mp3, .wav, or .ogg files
     '''
 
     def __init__(self, file, name, debug=False, timeme=False):

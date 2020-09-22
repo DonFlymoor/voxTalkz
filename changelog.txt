@@ -1,9 +1,13 @@
+Format:
+DD/MM/YYYY
+version
+- Changes
+...
+
 9/11/2020
 1.1.2
 - Bumped version to 1.1.2
 - Added support for wav sound effects
-
-9/11/2020
 - Added the possiblity for not using a collin in your script
 
 9/14/2020
@@ -12,4 +16,4 @@
 - Made the option to retry a sound effect
 - Changed yuoung_grandma to young_grandma
 - REPEAT modifier defaults to 2
-- Added suport for ogg sound effects
+- Added support for ogg sound effects
