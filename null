@@ -1,0 +1,21 @@
+Parsing test.txt...No such file: test.txtParsing test.txt...No such file: test.txtParsing test.txt...No such file: test.txtParsing test.txt...No such file: test.txt[Errno 2] No such file or directory: 'test.txt'Error: Could not parse!Parsing C:\Users\Don\Documents\Python\voxtalkz\test.txt...done!
+Parsed list is: 
+ [['bob', 'american_man'], ['bod', 'Hello World!'], ['SOUND', 'clang']] 
+american_man is NOT a type of person! Using american_woman...Hello World! is NOT a type of person! Using american_woman...Makeing clang... is not an applicable answer. Trying again. is not an applicable answer. Trying again.Error: could not turn to sound!Parsing C:\Users\Don\Documents\Python\voxtalkz\test.txt...done!
+Parsed list is: 
+ [['laura', 'american_woman'], ['laura', 'Hello World!']] 
+laura is now a american_woman
+Making laura say 'Hello World!'... Done!
+Recording what laura said...Done!
+Saving the file as nocloud.mp3...Done!
+Parsing C:\Users\Don\Documents\Python\voxtalkz\test.txt...done!
+Parsed list is: 
+ [['laura', 'american_woman'], ['laura', 'Hello World!']] 
+laura is now a american_woman
+Making laura say 'Hello World!'... Error when using wavenet voice!expected str, bytes or os.PathLike object, not _io.BytesIODone!
+Error: could not turn to sound!Parsing C:\Users\Don\Documents\Python\voxtalkz\test.txt...done!
+Parsed list is: 
+ [['laura', 'american_woman'], ['laura', 'Hello World!']] 
+laura is now a american_woman
+Making laura say 'Hello World!'... Done!
+Saving the file as cloud.mp3...Done!

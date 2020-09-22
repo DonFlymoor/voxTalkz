@@ -51,8 +51,16 @@ Write a short script and save it as `test.script`.
 	import voxtalks
 	voxtalkz.say(<path/to/test.script>, <output_file_name>, debug=True)
 	```
-Assuming all went well, you should see a file named test.mp3. Play it with your favorate mp3 playing programming.
+Assuming all went well, you should see a file named test.mp3. Play it with your favorate mp3 playing program.
 (Other filetypes will be made avilable upon request)
+
+### Using wavnet voices
+
+instead of `python3 -m voxtalkz test.script test --debug`, use `python3 -m voxtalkz test.script test --debug --cloud <my_api_key>`
+
+replace <my_api_key> with a Google Cloud TextToSpeach API key, (google it to find out how to get one)
+
+This will give you MUCH better sounding voices than the default default ones, but keep in mind, there are differant voices for wavenet. Look at the help section for more info.
 
 ### Use a sound Effect
 
@@ -177,7 +185,7 @@ This project is licensed under the GNUv3 License - see the [LICENSE.md](LICENSE)
 		@VOLUME= | Set volume change in decibels. A negitive number will reduce the volume
 		@PITCH=  | Set pitch change. e.g. "american_woman:Hello, world!@PITCH=0.3" would make the person sound like a little girl, while "american_woman:Hello, world!@PITCH=-0.3" would sound like an old woman
 
-	List of all actors:
+	List of all normal actors:
 		indian_man | Clearly speaks
 		american_woman | Clearly speaks
 		scottish_woman
@@ -206,5 +214,35 @@ This project is licensed under the GNUv3 License - see the [LICENSE.md](LICENSE)
 		spoiled_girl
 		american_woman
 	    
+	List of all wavenet actors:
+		"australian_woman":["en-AU-Wavenet-A","en-AU"],
+        "australian_man":["en-AU-Wavenet-B","en-AU"],
+        "personal_australian_woman":["en-AU-Wavenet-C","en-AU"],
+        "personal_australian_man":["en-AU-Wavenet-D","en-AU"],
+
+        "indian_woman":["en-IN-Wavenet-A","en-IN"],
+        "indian_man":["en-IN-Wavenet-B","en-IN"],
+        "personal_indian_woman":["en-IN-Wavenet-C","en-IN"],
+        "personal_indian_man":["en-IN-Wavenet-D","en-IN"],
+
+        "british_woman":["en-GB-Wavenet-A","en-GB"],
+        "british_man":["en-GB-Wavenet-B","en-GB"],
+        "personal_british_woman":["en-GB-Wavenet-C","en-GB"],
+        "urgent_british_woman":["en-GB-Wavenet-F","en-GB"],
+        "personal_british_man":["en-GB-Wavenet-D","en-GB"],
+
+        "young_american_man":["en-US-Wavenet-A","en-US"],
+        "middleage_american_man":["en-US-Wavenet-B","en-US"],
+        "american_man":["en-US-Wavenet-B","en-US"],
+        "middleage_american_woman":["en-US-Wavenet-C","en-US"],
+        "american_woman":["en-US-Wavenet-C","en-US"],
+        "middleage_personal_american_man":["en-US-Wavenet-D","en-US"],
+        "middleage_personal_american_woman":["en-US-Wavenet-E","en-US"],
+        "young_personal_american_woman":["en-US-Wavenet-F","en-US"],
+        "distracted_middleage_american_woman":["en-US-Wavenet-G","en-US"],
+        "young_american_woman":["en-US-Wavenet-H","en-US"],
+        "young_personal_american_man":["en-US-Wavenet-I","en-US"],
+        "cocky_american_man":["en-US-Wavenet-J","en-US"]
+
 	Sound effects must be in the .mp3 or .wav format and placed in /home/user/.voxtalk/soundEffects
 	To use footsteps.mp3 as a sound effect: put '*footsteps' in your script

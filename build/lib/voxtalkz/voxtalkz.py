@@ -8,23 +8,19 @@ import sys, os.path as path
 import io
 import time
 from pydub import AudioSegment
-import builtins
+import __builtin__
 import datetime
 import requests 
 import json
 import os
 import base64
 
-File = 'null'
+_File = 'null'
 
-def print(*args, **kwargs ):
-    try:
-        open(File,'x').close()
-    except:
-        pass
-    with open(File,'a') as _file:
-        _file.write(str(args[0]))
-    return builtins.print(*args, **kwargs)
+def print(args):
+    with open(_File,'w') as file:
+        file.write(args)
+    return __builtin__.print(*args, **kwargs)
 
 class voxTalkz():
     '''
@@ -46,18 +42,17 @@ class voxTalkz():
     '''
 
     def __init__(self, file, name, debug=False, cloudKey=False, timeme=False):
-        File = file
-        self.cloudKey = cloudKey
+        _File = file
         self.homedir = path.expanduser('~')
         self.name = name
         self.debug = debug
-        self.file = file
+        self._File = _File
         self.filename = name+'.mp3'
         self.SoundFile = AudioSegment.empty()
         self.Pause = AudioSegment.empty()
         self.Actors_Effects = {}
         # List of people
-        if not self.cloudKey:
+        if not cloudKey:
             self.Actors = {"indian_man":"bn",
                         "american_woman":"en-us",
                         "scottish_woman":"ca",
@@ -355,13 +350,14 @@ class voxTalkz():
                         audioIO = content['audioContent']
                         audioDecoded = base64.b64decode(audioIO)
                         File = io.BytesIO()
-                        File.write(audioDecoded)
+                        with open(File,'wb') as file:
+                            file.write(audioDecoded)
 
                         # I think this makes the file readable? Not sure
                         File.seek(0)
                         audio_segment = AudioSegment.from_mp3(File)
                     except Exception as Error:
-                        print('Error while using wavenet voice!')
+                        print('Error when using wavenet voice!')
                         print(Error)
 
                 if self.debug:
@@ -464,8 +460,8 @@ class voxTalkz():
         if self.debug:
             print('Done!\n')
 
-def say(*args, **kwargs):
-    voxTalkz(*args, **kwargs).ToSound()
+def say(script, filename, debug=False):
+    voxTalkz(script, filename, debug).ToSound()
 
 
 if __name__ == "__main__":

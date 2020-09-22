@@ -30,3 +30,5 @@ version
 - Tried weedkiller
 1.2.22
 - Left out bugtraps
+1.2.3
+- Finally got the bugs
