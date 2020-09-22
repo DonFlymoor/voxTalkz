@@ -255,7 +255,7 @@ class voxTalkz():
                         "american_woman":"en"}
         for string in actors:
             print("    "+string)
-        print("\nSound effects must be in the .mp3 format and placed in /home/user/.voxtalk/soundEffects\n To use footsteps.mp3: put *footsteps in your script")
+        print("\nSound effects must be in the .mp3, .wav, or .ogg format and placed in /home/user/.voxtalk/soundEffects\n To use footsteps.mp3: put *footsteps in your script")
 
     def ListToSound(self, Lists):
         '''
