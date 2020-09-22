@@ -26,3 +26,5 @@ version
 - Squashed bugs
 1.2.2
 - Used a bugzapper
+1.2.21
+- Tried weedkiller
