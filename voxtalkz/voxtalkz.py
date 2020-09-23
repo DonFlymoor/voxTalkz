@@ -341,7 +341,7 @@ class voxTalkz():
 
                         text = List[1]
 
-                        if 'ssml' in text:
+                        if '*' in text or '_' in text or '<' in text or '>' in text:
                             text_type = "ssml"
                             text.replace('ssml', '')
                             text = self.to_ssml(text)
