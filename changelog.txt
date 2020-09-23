@@ -32,3 +32,7 @@ version
 - Left out bugtraps
 1.2.3
 - Finally got the bugs
+1.2.4
+- And more bugs
+1.2.5
+- Added ssml input with readable usage

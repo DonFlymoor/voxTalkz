@@ -161,11 +161,11 @@ class voxTalkz():
         else:
             List = FILE
         # Split our list items into 1 or 2 item lists, using a collin
-        pops = []
+        to_remove = []
         for i in range(0,len(List)):
             # Don't parse if the list is blank!
             if List[i] == '\n':
-                pops+=[i]
+                to_remove+=[i]
                 continue
             if List[i][0] == '#':
                 List[i] = '\n'
@@ -209,7 +209,7 @@ class voxTalkz():
         print('flags:\n\
                 --debug        | the program tells you what it\'s doing\n\
                 --help         | print this help message\n\
-                --cloud=apiKey | use Google Cloud TextToSpeech API, must have API key after it\n\
+                --cloud apiKey | use Google Cloud TextToSpeech API, must have API key after it\n\
                 ')
         print("List of all effects:")
         list = ["@FADE | Fade to nothing",\
@@ -341,8 +341,16 @@ class voxTalkz():
 
                         text = List[1]
 
+                        if 'ssml' in text:
+                            text_type = "ssml"
+                            text.replace('ssml', '')
+                            text = self.to_ssml(text)
+                        else:
+                            text_type = "text"
+
                         data = {
-                                "input": {"text": text},
+                                "speakingRate":1,
+                                "input": {text_type: text},
                                 "voice": {"name":  self.Actors[List[0]][0], "languageCode": self.Actors[List[0]][1]},
                                 "audioConfig": {"audioEncoding": "MP3"}
                               };
@@ -448,12 +456,37 @@ class voxTalkz():
 
                     elif parsed[0] == "FADE_IN":
                         audio_segment = audio_segment.fade_in(len(audio_segment))
+                    else:
+                        print(parsed[0] + ' has not been implemented yet. Create an issue on github to have it implemented.')
             # Finaly, add audio segment to the sound-file
             if audio_segment != False:
                 SoundFile += audio_segment
         return SoundFile
 
+    def to_ssml(self, text):
+        '''
+        Converts this:
+        Hi! __I'M BOB!__ ... it's *nice* to %rate="slow" pitch='-2' volume='-2Db'> meet% you.
+        To this:
+        <speak>
+            Hi! <emphasis = strong> I'm Bob! </emphasis> <pause=300ms> it's <emphasis level="strong"> nice </emphasis> to <prosody rate="slow" pitch='-2' volume='-2Db'> meet </prosody> you
+        </speak>
+        There are many other ssml notaions, all of which are supported, but will have to be manually entered
+        '''
+        text = '<speak> ' + text + '</speak>'
+        replace_dict = {' __' : ' <emphasis level="strong"> ',
+                   '__ ' : ' </emphasis> ',
+                   ' _'  : ' <emphasis level="moderate"> ',
+                   '_ '  : ' </emphasis> ',
+                   ' *'  : ' <emphasis level="reduced"> ',
+                   '* '  : ' </emphasis> ',
+                   ' %'  : ' <prosody ',
+                   '% '  : ' </prosody> '}
 
+        for string in replace_dict:
+            text.replace(string, replace_dict[string])
+
+        return text
     def save(self):
         '''
         function to save compiled file
