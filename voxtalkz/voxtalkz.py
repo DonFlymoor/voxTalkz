@@ -481,7 +481,12 @@ class voxTalkz():
                    ' *'  : ' <emphasis level="reduced"> ',
                    '* '  : ' </emphasis> ',
                    ' %'  : ' <prosody ',
-                   '% '  : ' </prosody> '}
+                   '% '  : ' </prosody> ',
+                   '......'  : '<break time="2s"/>',
+                   '.....'  : '<break time="1s"/>',
+                   '....'  : '<break time="500ms"/>',
+                   '...'  : '<break time="200ms"/>',
+                   '..'  : '<break time="100ms"/>'}
 
         for string in replace_dict:
             text.replace(string, replace_dict[string])
