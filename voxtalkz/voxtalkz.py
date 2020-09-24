@@ -16,7 +16,7 @@ import os
 import base64
 import errno
 
-File = 'null'
+File = time.ctime().replace(' ','_')+'.txt'
 
 def print(*args, **kwargs ):
     try:
@@ -47,7 +47,6 @@ class voxTalkz():
     '''
 
     def __init__(self, file, name, debug=False, cloudKey=False, timeme=False):
-        File = file
         self.cloudKey = cloudKey
         self.homedir = path.expanduser('~')
         self.name = name
@@ -537,7 +536,7 @@ if __name__ == "__main__":
     # elif len(args) != 3:
     #     print("Expecting two arguments! Usage: voxtalkz [input file, output file] ")
 
-    else:
+    if True:
         print(args)
         script = args[1]
         print(f"Using {script} as input file")
