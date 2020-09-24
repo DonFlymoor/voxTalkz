@@ -14,6 +14,7 @@ import requests
 import json
 import os
 import base64
+import errno
 
 File = 'null'
 
@@ -274,23 +275,30 @@ class voxTalkz():
                 if "@" in List[1]:
                     effects=(List[1].split('@'))[1]
                     List[1]=(List[1].split('@'))[0]
+                    List[1] = List[1].replace('*', '')
             # Check to see if it's a sound effect
             if List[0] == 'SOUND':
                 if self.debug:
                     print('Makeing %s...'%List[1])
                 while True:
                     try:
-                        try:
-                            audio_segment =  AudioSegment.from_mp3(self.homedir+'/.voxTalkz/soundEffects/'+List[1]+'.mp3')
-                        except:
-                            audio_segment =  AudioSegment.from_wav(self.homedir+'/.voxTalkz/soundEffects/'+List[1]+'.wav')
-                        finally:
-                            audio_segment =  AudioSegment.from_ogg(self.homedir+'/.voxTalkz/soundEffects/'+List[1]+'.ogg')
+                        fileName = List[1]
+                        filePath = self.homedir+'\\.voxTalkz\\soundEffects\\'+ fileName
+                        if os.path.exists(filePath+'.mp3'):
+                            audio_segment =  AudioSegment.from_mp3(filePath+'.mp3')
+                        elif os.path.exists(filePath+'.wav'):
+                            audio_segment =  AudioSegment.from_wav(filePath+'.wav')
+                        elif os.path.exists(filePath+'.ogg'):
+                            audio_segment =  AudioSegment.from_ogg(filePath+'.ogg')
+                        else:
+                            raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), filePath)
+
                         if self.debug:
                             print("Done!\n")
                         break
-                    except:
-                        contd = input('\n !!! Could not open %s'%(self.homedir+'/.voxTalkz/soundEffects/'+List[1]+'.mp3 (or .wav, or ogg) !!! Type continue to skip the sound effect, retry to retry after you\'ve fixed the problem, or exit to quit.'))
+                    except Exception as e:
+                        print(e)
+                        contd = input('Type continue to skip the sound effect, retry to retry after you\'ve fixed the problem, or exit to quit.')
                         if contd == 'continue':
                             break
                         elif contd == 'retry':
@@ -349,7 +357,6 @@ class voxTalkz():
                             text_type = "text"
 
                         data = {
-                                "speakingRate":1,
                                 "input": {text_type: text},
                                 "voice": {"name":  self.Actors[List[0]][0], "languageCode": self.Actors[List[0]][1]},
                                 "audioConfig": {"audioEncoding": "MP3"}
@@ -371,6 +378,7 @@ class voxTalkz():
                     except Exception as Error:
                         print('Error while using wavenet voice!')
                         print(Error)
+                        print(content)
 
                 if self.debug:
                     print('Done!\n')
@@ -473,7 +481,7 @@ class voxTalkz():
         </speak>
         There are many other ssml notaions, all of which are supported, but will have to be manually entered
         '''
-        text = '<speak> ' + text + '</speak>'
+        text = '<speak> ' + text + ' </speak>'
         replace_dict = {' __' : ' <emphasis level="strong"> ',
                    '__ ' : ' </emphasis> ',
                    ' _'  : ' <emphasis level="moderate"> ',
@@ -489,7 +497,7 @@ class voxTalkz():
                    '..'  : '<break time="100ms"/>'}
 
         for string in replace_dict:
-            text.replace(string, replace_dict[string])
+            text = text.replace(string, replace_dict[string])
 
         return text
     def save(self):
@@ -526,8 +534,8 @@ if __name__ == "__main__":
             print('Usage: --cloud [text-to-speach API key]')
             args.remove("--cloud")
 
-    elif len(args) != 3:
-        print("Expecting two arguments! Usage: voxtalkz [input file, output file] ")
+    # elif len(args) != 3:
+    #     print("Expecting two arguments! Usage: voxtalkz [input file, output file] ")
 
     else:
         print(args)

@@ -36,3 +36,6 @@ version
 - And more bugs
 1.2.5
 - Added ssml input with readable usage
+1.2.6
+- Better readability for scripts
+- Sqaushed 3 bugs
