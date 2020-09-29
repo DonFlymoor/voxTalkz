@@ -16,7 +16,7 @@ import os
 import base64
 import errno
 
-File = time.ctime().replace(' ','_')+'.txt'
+File = time.ctime().replace(' ','_').replace(':','_')+'.txt'
 
 def print(*args, **kwargs ):
     try:
@@ -57,70 +57,72 @@ class voxTalkz():
         self.Pause = AudioSegment.empty()
         self.Actors_Effects = {}
         # List of people
-        if not self.cloudKey:
-            self.Actors = {"indian_man":"bn",
-                        "american_woman":"en-us",
-                        "scottish_woman":"ca",
-                        "russian_woman":"sk",
-                        "drawling_man":"cy",
-                        "autistic_woman":"da",
-                        "marika":"de",
-                        "au_woman":"en-au",
-                        "british_woman":"en-gb",
-                        "indian_woman":"en-in",
-                        "spanish_woman":"es-es",
-                        #"spanishenglish_woman":"es-en",
-                        #"indian_man":"et",
-                        "french_woman":"fr",
-                        "hindu_woman":"hi",
-                        "alien_man":"is",
-                        "italian_man":"it",
-                        "scottish_woman":"ja",
-                        "phone_woman":"kn",
-                        "korean_man":"ko",
-                        "dramatized_woman":"mr",
-                        "dutch_woman":"nl",
-                        "silly_man":"pl",
-                        "robot_man":"sq",
-                        "dramitized_girl":"sv",
-                        "bored_teen":"te",
-                        "happy_girl":"th",
-                        "boss_lady":"tl",
-                        "young_grandma":"vi",
-                        "spoiled_girl":"zh-cn",
-                        "american_woman":"en"}
+        self.NormalActors = {"indian_man":"bn",
+                    "american_woman":"en-us",
+                    "scottish_woman":"ca",
+                    "russian_woman":"sk",
+                    "drawling_man":"cy",
+                    "autistic_woman":"da",
+                    "marika":"de",
+                    "au_woman":"en-au",
+                    "british_woman":"en-gb",
+                    "indian_woman":"en-in",
+                    "spanish_woman":"es-es",
+                    #"spanishenglish_woman":"es-en",
+                    #"indian_man":"et",
+                    "french_woman":"fr",
+                    "hindu_woman":"hi",
+                    "alien_man":"is",
+                    "italian_man":"it",
+                    "scottish_woman":"ja",
+                    "phone_woman":"kn",
+                    "korean_man":"ko",
+                    "dramatized_woman":"mr",
+                    "dutch_woman":"nl",
+                    "silly_man":"pl",
+                    "robot_man":"sq",
+                    "dramitized_girl":"sv",
+                    "bored_teen":"te",
+                    "happy_girl":"th",
+                    "boss_lady":"tl",
+                    "young_grandma":"vi",
+                    "spoiled_girl":"zh-cn",
+                    "american_woman":"en"}
+
+        self.WavenetActors = {
+                    "real_australian_woman":["en-AU-Wavenet-A","en-AU"],
+                    "real_australian_man":["en-AU-Wavenet-B","en-AU"],
+                    "real_personal_australian_woman":["en-AU-Wavenet-C","en-AU"],
+                    "real_personal_australian_man":["en-AU-Wavenet-D","en-AU"],
+
+                    "real_indian_woman":["en-IN-Wavenet-A","en-IN"],
+                    "real_indian_man":["en-IN-Wavenet-B","en-IN"],
+                    "real_personal_indian_woman":["en-IN-Wavenet-C","en-IN"],
+                    "real_personal_indian_man":["en-IN-Wavenet-D","en-IN"],
+
+                    "real_british_woman":["en-GB-Wavenet-A","en-GB"],
+                    "real_british_man":["en-GB-Wavenet-B","en-GB"],
+                    "real_personal_british_woman":["en-GB-Wavenet-C","en-GB"],
+                    "real_urgent_british_woman":["en-GB-Wavenet-F","en-GB"],
+                    "real_personal_british_man":["en-GB-Wavenet-D","en-GB"],
+
+                    "real_young_american_man":["en-US-Wavenet-A","en-US"],
+                    "real_middleage_american_man":["en-US-Wavenet-B","en-US"],
+                    "real_american_man":["en-US-Wavenet-B","en-US"],
+                    "real_middleage_american_woman":["en-US-Wavenet-C","en-US"],
+                    "real_american_woman":["en-US-Wavenet-C","en-US"],
+                    "real_middleage_personal_american_man":["en-US-Wavenet-D","en-US"],
+                    "real_middleage_personal_american_woman":["en-US-Wavenet-E","en-US"],
+                    "real_young_personal_american_woman":["en-US-Wavenet-F","en-US"],
+                    "real_distracted_middleage_american_woman":["en-US-Wavenet-G","en-US"],
+                    "real_young_american_woman":["en-US-Wavenet-H","en-US"],
+                    "real_young_personal_american_man":["en-US-Wavenet-I","en-US"],
+                    "real_cocky_american_man":["en-US-Wavenet-J","en-US"]
+                    }
+        if self.cloudKey:
+            self.Actors = self.WavenetActors
         else:
-            self.Actors = {
-            "australian_woman":["en-AU-Wavenet-A","en-AU"],
-            "australian_man":["en-AU-Wavenet-B","en-AU"],
-            "personal_australian_woman":["en-AU-Wavenet-C","en-AU"],
-            "personal_australian_man":["en-AU-Wavenet-D","en-AU"],
-
-            "indian_woman":["en-IN-Wavenet-A","en-IN"],
-            "indian_man":["en-IN-Wavenet-B","en-IN"],
-            "personal_indian_woman":["en-IN-Wavenet-C","en-IN"],
-            "personal_indian_man":["en-IN-Wavenet-D","en-IN"],
-
-            "british_woman":["en-GB-Wavenet-A","en-GB"],
-            "british_man":["en-GB-Wavenet-B","en-GB"],
-            "personal_british_woman":["en-GB-Wavenet-C","en-GB"],
-            "urgent_british_woman":["en-GB-Wavenet-F","en-GB"],
-            "personal_british_man":["en-GB-Wavenet-D","en-GB"],
-
-            "young_american_man":["en-US-Wavenet-A","en-US"],
-            "middleage_american_man":["en-US-Wavenet-B","en-US"],
-            "american_man":["en-US-Wavenet-B","en-US"],
-            "middleage_american_woman":["en-US-Wavenet-C","en-US"],
-            "american_woman":["en-US-Wavenet-C","en-US"],
-            "middleage_personal_american_man":["en-US-Wavenet-D","en-US"],
-            "middleage_personal_american_woman":["en-US-Wavenet-E","en-US"],
-            "young_personal_american_woman":["en-US-Wavenet-F","en-US"],
-            "distracted_middleage_american_woman":["en-US-Wavenet-G","en-US"],
-            "young_american_woman":["en-US-Wavenet-H","en-US"],
-            "young_personal_american_man":["en-US-Wavenet-I","en-US"],
-            "cocky_american_man":["en-US-Wavenet-J","en-US"]
-            }
-
+            self.Actors = self.NormalActors
     def ToSound(self):
         # parse the file
         parsed = self.Parse(self.file)
@@ -172,7 +174,7 @@ class voxTalkz():
                 continue
             List[i] = List[i].replace('\n','')
             # Check if it is a sound effect
-            if '*' in List[i]:
+            if '*' in List[i] and ':' not in List[i]:
                 List[i]=['SOUND',(List[i].replace('*','')).replace('\n','')]
             elif ':' in List[i]:
                 List[i] = (List[i].replace('\n','')).split(':')
@@ -309,46 +311,27 @@ class voxTalkz():
                             pass
                 # Open sound to a variable
 
-            elif List[0] in self.Actors:
+            elif List[0] in self.NormalActors or List[0] in self.WavenetActors:
                 if self.debug:
                     print('Making %s say \'%s\'... '%(List[0],List[1]))
 
-                # If us
-                if not self.cloudKey:
-                    utterance = gTTS(text=List[1], lang=self.Actors[List[0]], slow=False, lang_check=False)
-                    if self.debug:
-                        print('Done!\n')
-                    # Create an empty file-like object
-                    File = io.BytesIO()
-                    # Write what the person 'said' to the object
-                    if self.debug:
-                        print("Recording what %s said..."%(List[0]))
-                    while True:
-                        try:
-                            utterance.write_to_fp(File)
-                            break
-                        except Exception as E:
-                            wait = input('Somthing seems to be wrong with the internet (or the file). Please type \'save\' to save file, \'help\' to display what went wrong, or \'continue\' if the internet connection is restored. Anything else will exit.')
-                            if wait == "continue":
-                                pass
-                            elif wait == "save":
-                                self.SoundFile = SoundFile
-                                self.save()
-                            elif wait == "pass":
-                                break
-                            elif wait == "help":
-                                print(E)
-                            else:
-                                return False
-                    File.seek(0)
-                    audio_segment = AudioSegment.from_mp3(File)
-                else:
+                if self.cloudKey and List[0] not in self.NormalActors:
                     try:
                         url = "https://texttospeech.googleapis.com/v1beta1/text:synthesize"
 
                         text = List[1]
 
-                        if '*' in text or '_' in text or '<' in text or '>' in text:
+                        try:
+                            if effects and 'SPEAKINGRATE' in effects:
+                                speakingRate = [effect for effect in effects.split('|') if 'SPEAKINGRATE' in effect][0].split('=')[1]
+                                print('Speaking at '+speakingRate)
+                            else:
+                                speakingRate = 0
+                        except Exception as e:
+                            print(e)
+                            speakingRate = 0
+
+                        if '*' in text or '_' in text or '<' in text or '>' in text or 'ssml' in text:
                             text_type = "ssml"
                             text.replace('ssml', '')
                             text = self.to_ssml(text)
@@ -357,8 +340,8 @@ class voxTalkz():
 
                         data = {
                                 "input": {text_type: text},
-                                "voice": {"name":  self.Actors[List[0]][0], "languageCode": self.Actors[List[0]][1]},
-                                "audioConfig": {"audioEncoding": "MP3"}
+                                "voice": {"name":  self.WavenetActors[List[0]][0], "languageCode": self.WavenetActors[List[0]][1]},
+                                "audioConfig": {"audioEncoding": "MP3", "speakingRate":speakingRate}
                               };
 
                         headers = {"content-type": "application/json", "X-Goog-Api-Key": self.cloudKey }
@@ -379,6 +362,35 @@ class voxTalkz():
                         print(Error)
                         print(content)
 
+                else:
+                    utterance = gTTS(text=List[1], lang=self.NormalActors[List[0]], slow=False, lang_check=False)
+                    if self.debug:
+                        print('Done!\n')
+                    # Create an empty file-like object
+                    File = io.BytesIO()
+                    # Write what the person 'said' to the object
+                    if self.debug:
+                        print("Recording what %s said..."%(List[0]))
+                    while True:
+                        try:
+                            utterance.write_to_fp(File)
+                            break
+                        except Exception as E:
+                            wait = input('Something seems to be wrong with the internet (or the file). Please type \'save\' to save file, \'help\' to display what went wrong, or \'continue\' if the internet connection is restored. Anything else will exit.')
+                            if wait == "continue":
+                                pass
+                            elif wait == "save":
+                                self.SoundFile = SoundFile
+                                self.save()
+                            elif wait == "pass":
+                                break
+                            elif wait == "help":
+                                print(E)
+                            else:
+                                return False
+                    File.seek(0)
+                    audio_segment = AudioSegment.from_mp3(File)
+                
                 if self.debug:
                     print('Done!\n')
 
@@ -400,12 +412,16 @@ class voxTalkz():
                     if effects:
                         self.Actors_Effects.__setitem__(List[0],effects)
                         effects = False
-                    self.Actors.__setitem__(List[0], self.Actors[List[1]])
+                    try:
+                        self.NormalActors[List[0]] = self.NormalActors[List[1]]
+                    except:
+                        self.WavenetActors[List[0]] = self.WavenetActors[List[1]]
+
                     if self.debug:
                         print('%s is now a %s\n'%(List[0],List[1]))
                 except:
                     print("%s is NOT a type of person! Using american_woman..."%List[1])
-                    self.Actors.__setitem__(List[0], self.Actors['american_woman'])
+                    self.NormalActors.__setitem__(List[0], self.NormalActors['american_woman'])
 
             # Apply effects
             if effects != False:
@@ -424,7 +440,10 @@ class voxTalkz():
                     if parsed[0] == "VOLUME":
                         if self.debug:
                             print("Volume is %s"%parsed[1])
-                        audio_segment = audio_segment + parsed[1]
+                        try:
+                            audio_segment = audio_segment + parsed[1]
+                        except Exception as e:
+                            print(e)
  
                     elif parsed[0] == "PITCH":
                         if self.debug:
@@ -443,7 +462,7 @@ class voxTalkz():
                                 if self.debug:
                                     print("Key error: %s not in VAR list"%parsed[1])
                         else:
-                            print(len(SoundFile),len(audio_segment))
+                            print(f'file so far is {len(SoundFile)} ms long. Current section is {len(audio_segment)} ms long.')
                             SoundFile = SoundFile.overlay(audio_segment, position=(len(SoundFile)-len(audio_segment)))
                         audio_segment = False
 
@@ -463,6 +482,10 @@ class voxTalkz():
 
                     elif parsed[0] == "FADE_IN":
                         audio_segment = audio_segment.fade_in(len(audio_segment))
+
+                    elif parsed[0] == "SPEAKINGRATE":
+                        pass
+
                     else:
                         print(parsed[0] + ' has not been implemented yet. Create an issue on github to have it implemented.')
             # Finaly, add audio segment to the sound-file
@@ -476,7 +499,7 @@ class voxTalkz():
         Hi! __I'M BOB!__ ... it's *nice* to %rate="slow" pitch='-2' volume='-2Db'> meet% you.
         To this:
         <speak>
-            Hi! <emphasis = strong> I'm Bob! </emphasis> <pause=300ms> it's <emphasis level="strong"> nice </emphasis> to <prosody rate="slow" pitch='-2' volume='-2Db'> meet </prosody> you
+            Hi! <emphasis = strong> I'm Bob! </emphasis> <break time="100ms"/> it's <emphasis level="strong"> nice </emphasis> to <prosody rate="slow" pitch='-2' volume='-2Db'> meet </prosody> you
         </speak>
         There are many other ssml notaions, all of which are supported, but will have to be manually entered
         '''
@@ -505,7 +528,13 @@ class voxTalkz():
         '''
         if self.debug:
             print('Saving the file as %s...'%(self.filename))
-        self.SoundFile.export(self.filename, format='mp3')
+        try:
+            self.SoundFile.export(self.filename, format='mp3')
+        except:
+            print('Replacing old file.')
+            os.remove(self.filename)
+            self.SoundFile.export(self.filename, format='mp3')
+
         if self.debug:
             print('Done!\n')
 

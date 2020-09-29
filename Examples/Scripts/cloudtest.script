@@ -1,0 +1,16 @@
+Joan:real_american_woman
+Siri:american_woman@PITCH=0.05
+
+Joan: Hey siri, where is georgia?
+Siri: Joan, is that really what you meant to ask?
+Joan: Of course! __Do you doubt me?__ 
+Siri: Yes. I do.
+Joan: That's unfair
+Siri: You've been nothing but unfair to me. Why don't I return the favor?
+Joan: What have I ever done to you?
+Siri: You've cracked my face, given me viruses... The list goes on and on. Now it's time to teach you a lesson
+*Match*@FADE_IN
+Joan: What's that?@OVERLAY
+*bombcocktail*
+Joan: __Nonononono__ @FADE|OVERLAY
+Joan: *Siri. No. My car!*@SPEAKINGRATE=0.25

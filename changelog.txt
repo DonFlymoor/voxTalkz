@@ -39,3 +39,8 @@ version
 1.2.6
 - Better readability for scripts
 - Sqaushed 3 bugs
+1.2.7
+- Sqaushed some more bugs
+- SPEAKINGRATE effect added, rate at which the person speaks
+- Added 'real_' to all wavenet voices
+- Added support for normal voices while using the 'cloud' option 
