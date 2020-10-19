@@ -5,17 +5,27 @@
 
 from gtts import gTTS
 import sys, os.path as path
-import io, time
+import io
+import time
 from pydub import AudioSegment
-import __builtin__
+import builtins
 import datetime
+import requests 
+import json
+import os
+import base64
+import errno
 
-file = 'null'
+File = time.ctime().replace(' ','_').replace(':','_')+'.txt'
 
-def print(args):
-    with open(file,'w') as file:
-        file.write(args)
-    return __builtin__.print(*args, **kwargs)
+def print(*args, **kwargs ):
+    try:
+        open(File,'x').close()
+    except:
+        pass
+    with open(File,'a') as _file:
+        _file.write(str(args[0]))
+    return builtins.print(*args, **kwargs)
 
 class voxTalkz():
     '''
@@ -36,8 +46,8 @@ class voxTalkz():
     sound effects must be placed into the effects folder as .mp3, .wav, or .ogg files
     '''
 
-    def __init__(self, file, name, debug=False, timeme=False):
-        global file
+    def __init__(self, file, name, debug=False, cloudKey=False, timeme=False):
+        self.cloudKey = cloudKey
         self.homedir = path.expanduser('~')
         self.name = name
         self.debug = debug
@@ -45,9 +55,9 @@ class voxTalkz():
         self.filename = name+'.mp3'
         self.SoundFile = AudioSegment.empty()
         self.Pause = AudioSegment.empty()
-        self.Crew_Effects = {}
+        self.Actors_Effects = {}
         # List of people
-        self.Crew = {"indian_man":"bn",
+        self.NormalActors = {"indian_man":"bn",
                     "american_woman":"en-us",
                     "scottish_woman":"ca",
                     "russian_woman":"sk",
@@ -78,6 +88,41 @@ class voxTalkz():
                     "young_grandma":"vi",
                     "spoiled_girl":"zh-cn",
                     "american_woman":"en"}
+
+        self.WavenetActors = {
+                    "real_australian_woman":["en-AU-Wavenet-A","en-AU"],
+                    "real_australian_man":["en-AU-Wavenet-B","en-AU"],
+                    "real_personal_australian_woman":["en-AU-Wavenet-C","en-AU"],
+                    "real_personal_australian_man":["en-AU-Wavenet-D","en-AU"],
+
+                    "real_indian_woman":["en-IN-Wavenet-A","en-IN"],
+                    "real_indian_man":["en-IN-Wavenet-B","en-IN"],
+                    "real_personal_indian_woman":["en-IN-Wavenet-C","en-IN"],
+                    "real_personal_indian_man":["en-IN-Wavenet-D","en-IN"],
+
+                    "real_british_woman":["en-GB-Wavenet-A","en-GB"],
+                    "real_british_man":["en-GB-Wavenet-B","en-GB"],
+                    "real_personal_british_woman":["en-GB-Wavenet-C","en-GB"],
+                    "real_urgent_british_woman":["en-GB-Wavenet-F","en-GB"],
+                    "real_personal_british_man":["en-GB-Wavenet-D","en-GB"],
+
+                    "real_young_american_man":["en-US-Wavenet-A","en-US"],
+                    "real_middleage_american_man":["en-US-Wavenet-B","en-US"],
+                    "real_american_man":["en-US-Wavenet-B","en-US"],
+                    "real_middleage_american_woman":["en-US-Wavenet-C","en-US"],
+                    "real_american_woman":["en-US-Wavenet-C","en-US"],
+                    "real_middleage_personal_american_man":["en-US-Wavenet-D","en-US"],
+                    "real_middleage_personal_american_woman":["en-US-Wavenet-E","en-US"],
+                    "real_young_personal_american_woman":["en-US-Wavenet-F","en-US"],
+                    "real_distracted_middleage_american_woman":["en-US-Wavenet-G","en-US"],
+                    "real_young_american_woman":["en-US-Wavenet-H","en-US"],
+                    "real_young_personal_american_man":["en-US-Wavenet-I","en-US"],
+                    "real_cocky_american_man":["en-US-Wavenet-J","en-US"]
+                    }
+        if self.cloudKey:
+            self.Actors = self.WavenetActors
+        else:
+            self.Actors = self.NormalActors
     def ToSound(self):
         # parse the file
         parsed = self.Parse(self.file)
@@ -118,18 +163,18 @@ class voxTalkz():
         else:
             List = FILE
         # Split our list items into 1 or 2 item lists, using a collin
-        pops = []
+        to_remove = []
         for i in range(0,len(List)):
             # Don't parse if the list is blank!
             if List[i] == '\n':
-                pops+=[i]
+                to_remove+=[i]
                 continue
             if List[i][0] == '#':
                 List[i] = '\n'
                 continue
             List[i] = List[i].replace('\n','')
             # Check if it is a sound effect
-            if '*' in List[i]:
+            if '*' in List[i] and ':' not in List[i]:
                 List[i]=['SOUND',(List[i].replace('*','')).replace('\n','')]
             elif ':' in List[i]:
                 List[i] = (List[i].replace('\n','')).split(':')
@@ -147,9 +192,35 @@ class voxTalkz():
         return List
 
     def help(self):
-        print("Usage: python3 -m voxtalkz [input file, output file] \n\nConverts play-like script to a .mp3 file \nScript file must be written in this manner: \n\n#The first time a unknown name is called, instead of making the person talk, the name will be assigned to a person. \nSusan:american_woman\n#Then the person will \"talk\"\nSusan:Hello, world!\n#Comments are allowed!\n*soundeffect \n\nEffects can be applied by adding an @ symbal the the effect name, like so:\nperson1:hello, world!@VOLUME=8\nA second effect can be applied by using the pipe(\"|\") like so:\nperson1:Hello, World!@FADE|VOLUME=8\n")
+        print("Usage: python3 -m voxtalkz [input file, output file] --flags\n\
+            \n\
+            Converts play-like script to a .mp3 file \n\
+            Script file must be written in this manner: \n\
+            \n\
+            #The first time a unknown name is called, instead of making the person talk, the name will be assigned to a person. \n\
+            Susan:american_woman\n\
+            #Then the person will \"talk\"\n\
+            Susan:Hello, world!\n\
+            #Comments are allowed!\n\
+            *soundeffect \n\
+            \n\
+            Effects can be applied by adding an @ symbal the the effect name, like so:\n\
+            person1:hello, world!@VOLUME=8\nA second effect can be applied by using the pipe(\"|\") like so:\n\
+            person1:Hello, World!@FADE|VOLUME=8\n\
+            ")
+        print('flags:\n\
+                --debug        | the program tells you what it\'s doing\n\
+                --help         | print this help message\n\
+                --cloud apiKey | use Google Cloud TextToSpeech API, must have API key after it\n\
+                ')
         print("List of all effects:")
-        list = ["@FADE | Fade to nothing","@FADE_IN | Fade in from silent","@OVERLAY | Overlays the sound onto what has already been recorded. Use @OVERLAY=VAR1 to START the overlay at the begining of where you assigned @VAR=1","@REPEAT= | Repeat audio segment however many times you specify. e.g. (american_woman:Hello, world!@REPEAT=10) would produce someone saying \"Hello, world!\" ten times","@VAR=    | Assign a number to a temporary table. Only used with @OVERLAY","@VOLUME= | Set volume change in decibels. A negitive number will reduce the volume","@PITCH=  | Set pitch change. e.g. \"american_woman:Hello, world!@PITCH=0.3\" would make the person sound like a little girl, while \"american_woman:Hello, world!@PITCH=-0.3\" would sound like an old woman"]
+        list = ["@FADE | Fade to nothing",\
+                "@FADE_IN | Fade in from silent",\
+                "@OVERLAY | Overlays the sound onto what has already been recorded. Use @OVERLAY=VAR1 to START the overlay at the begining of where you assigned @VAR=1",\
+                "@REPEAT= | Repeat audio segment however many times you specify. e.g. (american_woman:Hello, world!@REPEAT=10) would produce someone saying \"Hello, world!\" ten times",\
+                "@VAR=    | Assign a number to a temporary table. Only used with @OVERLAY",\
+                "@VOLUME= | Set volume change in decibels. A negitive number will reduce the volume",\
+                "@PITCH=  | Set pitch change. e.g. \"american_woman:Hello, world!@PITCH=0.3\" would make the person sound like a little girl, while \"american_woman:Hello, world!@PITCH=-0.3\" would sound like an old woman"]
         for string in list:
             print("    "+string)
         print("\nList of all actors:")
@@ -186,7 +257,7 @@ class voxTalkz():
                         "american_woman":"en"}
         for string in actors:
             print("    "+string)
-        print("\nSound effects must be in the .mp3 format and placed in /home/user/.voxtalk/soundEffects\n To use footsteps.mp3: put *footsteps in your script")
+        print("\nSound effects must be in the .mp3, .wav, or .ogg format and placed in /home/user/.voxtalk/soundEffects\n To use footsteps.mp3: put *footsteps in your script")
 
     def ListToSound(self, Lists):
         '''
@@ -205,23 +276,30 @@ class voxTalkz():
                 if "@" in List[1]:
                     effects=(List[1].split('@'))[1]
                     List[1]=(List[1].split('@'))[0]
+                    List[1] = List[1].replace('*', '')
             # Check to see if it's a sound effect
             if List[0] == 'SOUND':
                 if self.debug:
                     print('Makeing %s...'%List[1])
                 while True:
                     try:
-                        try:
-                            audio_segment =  AudioSegment.from_mp3(self.homedir+'/.voxTalkz/soundEffects/'+List[1]+'.mp3')
-                        except:
-                            audio_segment =  AudioSegment.from_wav(self.homedir+'/.voxTalkz/soundEffects/'+List[1]+'.wav')
-                        except:
-                            audio_segment =  AudioSegment.from_ogg(self.homedir+'/.voxTalkz/soundEffects/'+List[1]+'.ogg')
+                        fileName = List[1]
+                        filePath = self.homedir+'\\.voxTalkz\\soundEffects\\'+ fileName
+                        if os.path.exists(filePath+'.mp3'):
+                            audio_segment =  AudioSegment.from_mp3(filePath+'.mp3')
+                        elif os.path.exists(filePath+'.wav'):
+                            audio_segment =  AudioSegment.from_wav(filePath+'.wav')
+                        elif os.path.exists(filePath+'.ogg'):
+                            audio_segment =  AudioSegment.from_ogg(filePath+'.ogg')
+                        else:
+                            raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), filePath)
+
                         if self.debug:
                             print("Done!\n")
                         break
-                    except:
-                        contd = input('\n !!! Could not open %s'%(self.homedir+'/.voxTalkz/soundEffects/'+List[1]+'.mp3 (or .wav, or ogg) !!! Type continue to skip the sound effect, retry to retry after you\'ve fixed the problem, or exit to quit.'))
+                    except Exception as e:
+                        print(e)
+                        contd = input('Type continue to skip the sound effect, retry to retry after you\'ve fixed the problem, or exit to quit.')
                         if contd == 'continue':
                             break
                         elif contd == 'retry':
@@ -233,45 +311,94 @@ class voxTalkz():
                             pass
                 # Open sound to a variable
 
-            elif List[0] in self.Crew:
+            elif List[0] in self.NormalActors or List[0] in self.WavenetActors:
                 if self.debug:
                     print('Making %s say \'%s\'... '%(List[0],List[1]))
-                utterance = gTTS(text=List[1], lang=self.Crew[List[0]], slow=False, lang_check=False)
-                if self.debug:
-                    print('Done!\n')
-                # Create an empty file-like object
-                File = io.BytesIO()
-                # Write what the person 'said' to the object
-                if self.debug:
-                    print("Recording what %s said..."%(List[0]))
-                while True:
+
+                if self.cloudKey and List[0] not in self.NormalActors:
                     try:
-                        utterance.write_to_fp(File)
-                        break
-                    except Exception as E:
-                        wait = input('Somthing seems to be wrong with the internet (or the file). Please type \'save\' to save file, \'help\' to display what went wrong, or \'continue\' if the internet connection is restored. Anything else will exit.')
-                        if wait == "continue":
-                            pass
-                        elif wait == "save":
-                            self.SoundFile = SoundFile
-                            self.save()
-                        elif wait == "pass":
-                            break
-                        elif wait == "help":
-                            print(E)
+                        url = "https://texttospeech.googleapis.com/v1beta1/text:synthesize"
+
+                        text = List[1]
+
+                        try:
+                            if effects and 'SPEAKINGRATE' in effects:
+                                speakingRate = [effect for effect in effects.split('|') if 'SPEAKINGRATE' in effect][0].split('=')[1]
+                                print('Speaking at '+speakingRate)
+                            else:
+                                speakingRate = 0
+                        except Exception as e:
+                            print(e)
+                            speakingRate = 0
+
+                        if '*' in text or '_' in text or '<' in text or '>' in text or 'ssml' in text:
+                            text_type = "ssml"
+                            text.replace('ssml', '')
+                            text = self.to_ssml(text)
                         else:
-                            return False
-                # I think this makes the file readable? Not sure
-                File.seek(0)
-                audio_segment = AudioSegment.from_mp3(File)
+                            text_type = "text"
+
+                        data = {
+                                "input": {text_type: text},
+                                "voice": {"name":  self.WavenetActors[List[0]][0], "languageCode": self.WavenetActors[List[0]][1]},
+                                "audioConfig": {"audioEncoding": "MP3", "speakingRate":speakingRate}
+                              };
+
+                        headers = {"content-type": "application/json", "X-Goog-Api-Key": self.cloudKey }
+
+                        r = requests.post(url=url, json=data, headers=headers)
+
+                        content = json.loads(r.content)
+                        audioIO = content['audioContent']
+                        audioDecoded = base64.b64decode(audioIO)
+                        File = io.BytesIO()
+                        File.write(audioDecoded)
+
+                        # I think this makes the file readable? Not sure
+                        File.seek(0)
+                        audio_segment = AudioSegment.from_mp3(File)
+                    except Exception as Error:
+                        print('Error while using wavenet voice!')
+                        print(Error)
+                        print(content)
+
+                else:
+                    utterance = gTTS(text=List[1], lang=self.NormalActors[List[0]], slow=False, lang_check=False)
+                    if self.debug:
+                        print('Done!\n')
+                    # Create an empty file-like object
+                    File = io.BytesIO()
+                    # Write what the person 'said' to the object
+                    if self.debug:
+                        print("Recording what %s said..."%(List[0]))
+                    while True:
+                        try:
+                            utterance.write_to_fp(File)
+                            break
+                        except Exception as E:
+                            wait = input('Something seems to be wrong with the internet (or the file). Please type \'save\' to save file, \'help\' to display what went wrong, or \'continue\' if the internet connection is restored. Anything else will exit.')
+                            if wait == "continue":
+                                pass
+                            elif wait == "save":
+                                self.SoundFile = SoundFile
+                                self.save()
+                            elif wait == "pass":
+                                break
+                            elif wait == "help":
+                                print(E)
+                            else:
+                                return False
+                    File.seek(0)
+                    audio_segment = AudioSegment.from_mp3(File)
+                
                 if self.debug:
                     print('Done!\n')
 
                 try:
                     if effects:
-                        effects = self.Crew_Effects[List[0]] + "|" + effects
+                        effects = self.Actors_Effects[List[0]] + "|" + effects
                     else:
-                        effects = self.Crew_Effects[List[0]]
+                        effects = self.Actors_Effects[List[0]]
                 except:
                     pass
                 #self.SoundFile += self.Pause.read()
@@ -283,14 +410,18 @@ class voxTalkz():
                     List[1] = List[1].strip()
 
                     if effects:
-                        self.Crew_Effects.__setitem__(List[0],effects)
+                        self.Actors_Effects.__setitem__(List[0],effects)
                         effects = False
-                    self.Crew.__setitem__(List[0], self.Crew[List[1]])
+                    try:
+                        self.NormalActors[List[0]] = self.NormalActors[List[1]]
+                    except:
+                        self.WavenetActors[List[0]] = self.WavenetActors[List[1]]
+
                     if self.debug:
                         print('%s is now a %s\n'%(List[0],List[1]))
                 except:
                     print("%s is NOT a type of person! Using american_woman..."%List[1])
-                    self.Crew.__setitem__(List[0], self.Crew['american_woman'])
+                    self.NormalActors.__setitem__(List[0], self.NormalActors['american_woman'])
 
             # Apply effects
             if effects != False:
@@ -309,7 +440,10 @@ class voxTalkz():
                     if parsed[0] == "VOLUME":
                         if self.debug:
                             print("Volume is %s"%parsed[1])
-                        audio_segment = audio_segment + parsed[1]
+                        try:
+                            audio_segment = audio_segment + parsed[1]
+                        except Exception as e:
+                            print(e)
  
                     elif parsed[0] == "PITCH":
                         if self.debug:
@@ -328,7 +462,7 @@ class voxTalkz():
                                 if self.debug:
                                     print("Key error: %s not in VAR list"%parsed[1])
                         else:
-                            print(len(SoundFile),len(audio_segment))
+                            print(f'file so far is {len(SoundFile)} ms long. Current section is {len(audio_segment)} ms long.')
                             SoundFile = SoundFile.overlay(audio_segment, position=(len(SoundFile)-len(audio_segment)))
                         audio_segment = False
 
@@ -348,29 +482,70 @@ class voxTalkz():
 
                     elif parsed[0] == "FADE_IN":
                         audio_segment = audio_segment.fade_in(len(audio_segment))
+
+                    elif parsed[0] == "SPEAKINGRATE":
+                        pass
+
+                    else:
+                        print(parsed[0] + ' has not been implemented yet. Create an issue on github to have it implemented.')
             # Finaly, add audio segment to the sound-file
             if audio_segment != False:
                 SoundFile += audio_segment
         return SoundFile
 
+    def to_ssml(self, text):
+        '''
+        Converts this:
+        Hi! __I'M BOB!__ ... it's *nice* to %rate="slow" pitch='-2' volume='-2Db'> meet% you.
+        To this:
+        <speak>
+            Hi! <emphasis = strong> I'm Bob! </emphasis> <break time="100ms"/> it's <emphasis level="strong"> nice </emphasis> to <prosody rate="slow" pitch='-2' volume='-2Db'> meet </prosody> you
+        </speak>
+        There are many other ssml notaions, all of which are supported, but will have to be manually entered
+        '''
+        text = '<speak> ' + text + ' </speak>'
+        replace_dict = {' __' : ' <emphasis level="strong"> ',
+                   '__ ' : ' </emphasis> ',
+                   ' _'  : ' <emphasis level="moderate"> ',
+                   '_ '  : ' </emphasis> ',
+                   ' *'  : ' <emphasis level="reduced"> ',
+                   '* '  : ' </emphasis> ',
+                   ' %'  : ' <prosody ',
+                   '% '  : ' </prosody> ',
+                   '......'  : '<break time="2s"/>',
+                   '.....'  : '<break time="1s"/>',
+                   '....'  : '<break time="500ms"/>',
+                   '...'  : '<break time="200ms"/>',
+                   '..'  : '<break time="100ms"/>'}
 
+        for string in replace_dict:
+            text = text.replace(string, replace_dict[string])
+
+        return text
     def save(self):
         '''
         function to save compiled file
         '''
         if self.debug:
             print('Saving the file as %s...'%(self.filename))
-        self.SoundFile.export(self.filename, format='mp3')
+        try:
+            self.SoundFile.export(self.filename, format='mp3')
+        except:
+            print('Replacing old file.')
+            os.remove(self.filename)
+            self.SoundFile.export(self.filename, format='mp3')
+
         if self.debug:
             print('Done!\n')
 
-def say(script, filename, debug=False):
-    voxTalkz(script, filename, debug).ToSound()
+def say(*args, **kwargs):
+    voxTalkz(*args, **kwargs).ToSound()
 
 
 if __name__ == "__main__":
     args = sys.argv
     debug = False
+    cloudKey = False
     if ("--debug") in args:
         args.remove("--debug")
         debug = True
@@ -378,10 +553,19 @@ if __name__ == "__main__":
     if ("--help" or "-h") in args:
         voxTalkz('', '').help()
 
-    elif len(args) != 3:
-        print("Expecting two arguments! Usage: voxtalkz [input file, output file] ")
+    if ("--cloud") in args:
+        try:
+            cloudKey = args[args.index('--cloud')+1]
+            del args[args.index('--cloud')+1]
+            args.remove("--cloud")
+        except:
+            print('Usage: --cloud [text-to-speach API key]')
+            args.remove("--cloud")
 
-    else:
+    # elif len(args) != 3:
+    #     print("Expecting two arguments! Usage: voxtalkz [input file, output file] ")
+
+    if True:
         print(args)
         script = args[1]
         print(f"Using {script} as input file")
@@ -393,5 +577,5 @@ if __name__ == "__main__":
         if script:
             filename = args[2]
             print(f"Outputting to {filename}")
-            voxTalkz(script, filename, debug).ToSound()
+            voxTalkz(script, filename, debug, cloudKey=cloudKey).ToSound()
 

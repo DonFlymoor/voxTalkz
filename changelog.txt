@@ -17,3 +17,30 @@ version
 - Changed yuoung_grandma to young_grandma
 - REPEAT modifier defaults to 2
 - Added support for ogg sound effects
+
+9/21/2020
+1.2.0
+- Bumped version to 1.2.0
+- Added support for google cloud wavenet voices, much higher quality!
+1.2.1
+- Squashed bugs
+1.2.2
+- Used a bugzapper
+1.2.21
+- Tried weedkiller
+1.2.22
+- Left out bugtraps
+1.2.3
+- Finally got the bugs
+1.2.4
+- And more bugs
+1.2.5
+- Added ssml input with readable usage
+1.2.6
+- Better readability for scripts
+- Sqaushed 3 bugs
+1.2.7
+- Sqaushed some more bugs
+- SPEAKINGRATE effect added, rate at which the person speaks
+- Added 'real_' to all wavenet voices
+- Added support for normal voices while using the 'cloud' option 
