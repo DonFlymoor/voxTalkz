@@ -46,9 +46,13 @@ class voxTalkz():
     sound effects must be placed into the effects folder as .mp3, .wav, or .ogg files
     '''
 
-    def __init__(self, file, name, debug=False, cloudKey=False, timeme=False):
+    def __init__(self, file, name, debug=False, cloudKey=False, timeme=False, soundDir=False):
         self.cloudKey = cloudKey
         self.homedir = path.expanduser('~')
+        if soundDir:
+            self.soundDir = soundDir
+        else:
+            self.soundDir = self.homedir+'/.voxtalkz/soundEffects/'
         self.name = name
         self.debug = debug
         self.file = file
@@ -284,7 +288,7 @@ class voxTalkz():
                 while True:
                     try:
                         fileName = List[1]
-                        filePath = self.homedir+'/.voxTalkz/soundEffects/'+ fileName
+                        filePath = self.soundDir + fileName
                         if os.path.exists(filePath+'.mp3'):
                             audio_segment =  AudioSegment.from_mp3(filePath+'.mp3')
                         elif os.path.exists(filePath+'.wav'):
