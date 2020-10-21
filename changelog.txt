@@ -44,3 +44,5 @@ version
 - SPEAKINGRATE effect added, rate at which the person speaks
 - Added 'real_' to all wavenet voices
 - Added support for normal voices while using the 'cloud' option 
+1.2.8
+- Made compatable for linux
