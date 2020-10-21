@@ -284,7 +284,7 @@ class voxTalkz():
                 while True:
                     try:
                         fileName = List[1]
-                        filePath = self.homedir+'\\.voxTalkz\\soundEffects\\'+ fileName
+                        filePath = self.homedir+'/.voxTalkz/soundEffects/'+ fileName
                         if os.path.exists(filePath+'.mp3'):
                             audio_segment =  AudioSegment.from_mp3(filePath+'.mp3')
                         elif os.path.exists(filePath+'.wav'):
