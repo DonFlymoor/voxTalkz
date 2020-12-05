@@ -90,7 +90,7 @@ Navigate to your home directory (On windows that's C:/Users/Username) and create
 
 Navigate into that folder and create a new folder named `soundEffects`.
 
-Download a .mp3 or .wav sound effect (other filetypes will be made available upon request, or as I need them) and place it in the `.voxtalkz/soundEffects/` folder, for this tutorial we will assume the file is called `footsteps.mp3`.
+Download a .mp3 .wav, or .ogg sound effect (other filetypes will be made available upon request, or as I need them) and place it in the `~/.voxtalkz/soundEffects/` folder, for this tutorial we will assume the file is called `footsteps.mp3`. (`~` means your home directory, on windows it's located at `C:/Users/<yourusername>`, and on linux it's at `/home/<yourusername>`)
 
 Write a short script and save it as `test2.script`.
 
@@ -103,7 +103,7 @@ Susan:Hello, World!
 Susan:Goodbye, World!
 
 # Add the soud effect
-*footsteps
+*footsteps*
 ```
  
 Open the commandline and navigate to your file.
@@ -207,7 +207,7 @@ This project is licensed under the GNUv3 License - see the [LICENSE.md](LICENSE)
 		@VOLUME= | Set volume change in decibels. A negitive number will reduce the volume
 		@PITCH=  | Set pitch change. e.g. "american_woman:Hello, world!@PITCH=0.3" would make the person sound like a little girl, while "american_woman:Hello, world!@PITCH=-0.3" would sound like an old woman
 	Wavenet/Cloud voice specific effects:
-		@SPEAKINGRATE= | number from 0.25 to 4.0, where 1 is normal, 2 is twice as fast, 0.5 if half speed...
+		@SPEAKINGRATE= | speed at which the person talks, a number from 0.25 to 4.0, where 1 is normal, 2 is twice as fast, 0.5 if half speed...
 
 	List of all normal actors:
 		indian_man | Clearly speaks
